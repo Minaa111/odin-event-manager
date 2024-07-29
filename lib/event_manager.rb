@@ -62,6 +62,18 @@ def peak_reg_hour(reg_dates)
   reg_per_hour.max_by { |_key, value| value }
 end
 
+def peak_reg_day(reg_dates)
+  reg_per_day = Hash.new(0)
+
+  reg_dates.each do |reg_date|
+    time = DateTime.strptime(reg_date, '%m/%d/%y %H:%M')
+    day = time.strftime('%A')
+    reg_per_day[day] += 1
+  end
+
+  reg_per_day.max_by { |_key, value| value }
+end
+
 puts 'EventManager initialized.'
 
 contents = CSV.open(
@@ -87,4 +99,6 @@ contents.each do |row|
   save_thank_you_letter(id, form_letter)
 end
 peak_reg_hour = peak_reg_hour(reg_dates)
+peak_reg_day = peak_reg_day(reg_dates)
 puts "Peak registration hour was around #{peak_reg_hour[0]}:00 with #{peak_reg_hour[1]} registrations."
+puts "Peak registration day was #{peak_reg_day[0]} with #{peak_reg_day[1]} registrations."
